@@ -1,0 +1,162 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+/* Veroné design tokens */
+@theme {
+  /* Inter Tight for Latin; Arabic glyphs fall through to IBM Plex Sans Arabic. */
+  --font-sans: "Inter Tight", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+
+  --color-cream-50: #fdfaf7;
+  --color-cream-100: #faf4ee;
+  --color-cream-200: #f3e9df;
+  --color-sand-200: #e9e3dc; /* sand-400 (#c9b8a8) lightened ~60% toward white */
+  --color-sand-300: #e3d5c8;
+  --color-sand-400: #c9b8a8;
+  --color-taupe-500: #9a8b81;
+  --color-taupe-600: #74665d;
+  --color-cocoa-700: #4a322e;
+  --color-cocoa-800: #3a2422;
+  --color-cocoa-900: #2c1a19;
+  --color-sale: #e5484d;
+
+  --radius-card: 1.25rem;
+  --shadow-soft: 0 1px 2px rgb(44 26 25 / 0.04), 0 8px 24px -12px rgb(44 26 25 / 0.12);
+
+  --tracking-display: -0.045em;
+
+  /* Extra-wide breakpoint for full-bleed catalog grids. */
+  --breakpoint-3xl: 112.5rem;
+
+  /* Site-wide entrance motion (see components/ui/Reveal.tsx and RootLayout). */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-reveal-up: reveal-up 700ms var(--ease-out-soft) backwards;
+  --animate-page-in: page-in 450ms var(--ease-out-soft) backwards;
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    /* Fill mode is `backwards`: once finished no transform remains, so fixed/sticky children behave normally. */
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes page-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Press marquee: the track holds two identical halves, so -50% loops seamlessly. */
+  /* Sale hero price tags: drop from above on their string, overshoot, then swing to rest. */
+  --animate-tag-drop: tag-drop 1200ms cubic-bezier(0.2, 0.85, 0.25, 1) backwards;
+  @keyframes tag-drop {
+    0% {
+      translate: 0 -140%;
+      rotate: -10deg;
+    }
+    55% {
+      translate: 0 4%;
+      rotate: 5deg;
+    }
+    75% {
+      translate: 0 -1%;
+      rotate: calc(var(--tag-tilt, 0deg) - 2.5deg);
+    }
+    90% {
+      rotate: calc(var(--tag-tilt, 0deg) + 1deg);
+    }
+    100% {
+      translate: 0 0;
+      rotate: var(--tag-tilt, 0deg);
+    }
+  }
+  --animate-marquee: marquee 60s linear infinite;
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-white font-sans text-cocoa-900;
+  }
+  ::selection {
+    @apply bg-sand-300 text-cocoa-900;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-cocoa-900;
+  }
+}
+
+/* Dual-thumb range slider used by the price filter */
+@layer components {
+  .range-thumb {
+    @apply pointer-events-none absolute inset-x-0 top-1/2 h-0 w-full -translate-y-1/2 appearance-none bg-transparent;
+  }
+  .range-thumb::-webkit-slider-thumb {
+    @apply pointer-events-auto size-3.5 cursor-pointer appearance-none rounded-full border-[1.5px] border-cocoa-900 bg-white;
+  }
+  .range-thumb::-moz-range-thumb {
+    @apply pointer-events-auto size-3.5 cursor-pointer rounded-full border-[1.5px] border-cocoa-900 bg-white;
+  }
+
+  /* Always-visible slim scrollbar for the mobile drawer */
+  .scrollbar-visible {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-sand-400) var(--color-cream-100);
+  }
+  .scrollbar-visible::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-visible::-webkit-scrollbar-track {
+    background: var(--color-cream-100);
+  }
+  .scrollbar-visible::-webkit-scrollbar-thumb {
+    background: var(--color-sand-400);
+    border-radius: 9999px;
+  }
+}
+
+/*
+ * Arabic (RTL). Unlayered so these win over utility classes:
+ * - Arabic is a connected script, so the tight Latin tracking is reset.
+ * - Directional icons (arrows, chevrons) mirror to point the reading way.
+ */
+:root[dir="rtl"] body,
+:root[dir="rtl"] body * {
+  letter-spacing: normal;
+}
+:root[dir="rtl"] body {
+  line-height: 1.6;
+}
+:root[dir="rtl"] :is(h1, h2, h3) {
+  line-height: 1.25;
+}
+:root[dir="rtl"]
+  :is(
+    .lucide-arrow-right,
+    .lucide-arrow-left,
+    .lucide-chevron-right,
+    .lucide-chevron-left,
+    .lucide-truck,
+    .lucide-arrow-up-right
+  ) {
+  transform: scaleX(-1);
+}

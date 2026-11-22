@@ -1,0 +1,12 @@
+{
+  "title": "Veroné",
+  "description": "Discover premium skincare, explore product details and editorial guides, and manage a persistent shopping cart in a refined, easy-to-use storefront.",
+  "language": "en",
+  "icons": {
+    "icon": "/.figma/make/favicon.png"
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
